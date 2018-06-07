@@ -1,5 +1,5 @@
 import React from "react";
-import { Link, Redirect } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { Button, Form, Segment, Grid } from "semantic-ui-react";
 
 const baseUrl = "http://localhost:3000";
@@ -33,6 +33,7 @@ class LoginContainer extends React.Component {
     })
       .then(res => res.json())
       .then(json => {
+        // debugger;
         if (json.token) {
           localStorage.setItem("token", json.token);
           this.props.handleLogIn();
@@ -125,7 +126,7 @@ class LoginContainer extends React.Component {
                 </Form.Group>
                 <Form.Checkbox label="I agree to the Terms and Conditions" />
                 <Button type="submit" onClick={e => this.saveUser(e)}>
-                  <Link to="/home" style={{ color: "#000000" }}>
+                  <Link to="/setup" style={{ color: "#000000" }}>
                     Submit
                   </Link>
                 </Button>

@@ -19,7 +19,7 @@ class UserSetUp extends React.Component {
       .then(json => {
         let dropdownParsed = [];
         json.map(category => {
-          dropdownParsed.push({
+          return dropdownParsed.push({
             key: category.id,
             value: category.name,
             text: category.name
@@ -48,9 +48,8 @@ class UserSetUp extends React.Component {
           <Segment>
             <Form onSubmit={this.handleSubmit}>
               {this.state.inputs.map(input => (
-                <Form.Group>
+                <Form.Group key={input}>
                   <Dropdown
-                    onChange={this.chosenCategories}
                     placeholder="Categories"
                     fluid
                     search

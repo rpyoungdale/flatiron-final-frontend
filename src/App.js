@@ -4,7 +4,7 @@ import Navbar from "./Components/Navbar";
 import LoginContainer from "./Containers/LoginContainer";
 import UserSetUp from "./Containers/UserSetUp";
 import "./App.css";
-import { BrowserRouter, Route, Redirect } from "react-router-dom";
+import { BrowserRouter, Route } from "react-router-dom";
 
 const baseUrl = "http://localhost:3000";
 
@@ -30,6 +30,7 @@ class App extends Component {
       })
         .then(res => res.json())
         .then(json => {
+          // debugger;
           this.setState({
             currentUser: json,
             loggedIn: true
@@ -97,7 +98,7 @@ class App extends Component {
           />
           {this.state.loggedIn && localStorage.getItem("token") ? (
             this.state.firstTimeUser ? (
-              <UserSetUp />
+              <Route exact path="/setup" render={() => <UserSetUp />} />
             ) : (
               <Route
                 exact
