@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import HomePage from "./Components/HomePage";
+import Budget from "./Components/Budget";
 import Navbar from "./Components/Navbar";
 import LoginContainer from "./Containers/LoginContainer";
 import UserSetUp from "./Containers/UserSetUp";
@@ -39,12 +39,6 @@ class App extends Component {
     }
   }
 
-  handleLogIn = () => {
-    this.setState({
-      loggedIn: true
-    });
-  };
-
   handleLogOut = () => {
     localStorage.removeItem("token");
     this.setState({
@@ -59,6 +53,19 @@ class App extends Component {
       firstTimeUser: !this.state.newUser
     });
   };
+
+  // addedTrans = () => {
+  //   debugger;
+  //   this.setState({
+  //     addedTrans: (this.state.addedTrans += 1)
+  //   });
+  // };
+
+  // toggleSpending = () => {
+  //   this.setState({
+  //     spendingPage: true
+  //   });
+  // };
 
   setUser = firstTime => {
     fetch(`${baseUrl}/user`, {
@@ -77,18 +84,14 @@ class App extends Component {
           });
         } else {
           this.setState({
-            currentUser: json
+            currentUser: json,
+            loggedIn: true
           });
         }
       });
   };
 
-  // this.setState({
-  //   currentUser: json
-  // });
-
   render() {
-    console.log(this.state);
     return (
       <BrowserRouter>
         <div className="App">
@@ -96,14 +99,20 @@ class App extends Component {
             loggedIn={this.state.loggedIn}
             handleLogOut={this.handleLogOut}
           />
+
           {this.state.loggedIn && localStorage.getItem("token") ? (
             this.state.firstTimeUser ? (
               <Route exact path="/setup" render={() => <UserSetUp />} />
             ) : (
               <Route
                 exact
-                path="/home"
-                render={() => <HomePage currentUser={this.state.currentUser} />}
+                path="/budget"
+                render={() => (
+                  <Budget
+                    addedTrans={this.addedTrans}
+                    currentUser={this.state.currentUser}
+                  />
+                )}
               />
             )
           ) : (
