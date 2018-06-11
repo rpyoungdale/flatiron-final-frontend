@@ -36,7 +36,7 @@ class LoginContainer extends React.Component {
         // debugger;
         if (json.token) {
           localStorage.setItem("token", json.token);
-          // this.props.handleLogIn();
+          this.props.handleLogIn();
           this.props.setUser(firstTime);
         }
       });
@@ -153,8 +153,8 @@ class LoginContainer extends React.Component {
                 </Form.Group>
                 <Form.Checkbox label="I agree to the Terms and Conditions" />
                 <Button onClick={this.login} type="submit">
-                  <Link to="/budget" style={{ color: "#000000" }}>
-                    Login
+                  <Link to="/home" style={{ color: "#000000" }}>
+                    Submit
                   </Link>
                 </Button>
                 <br />

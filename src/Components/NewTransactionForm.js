@@ -45,8 +45,9 @@ class NewTransactionForm extends React.Component {
         "Content-Type": "application/json",
         Authorization: `Bearer ${localStorage.getItem("token")}`
       }
-    }).then(res => res.json());
-    // this.props.addedTrans()
+    })
+      .then(res => res.json())
+      .then(json => console.log(json));
   };
 
   handleChange = e => {
@@ -56,7 +57,7 @@ class NewTransactionForm extends React.Component {
   };
 
   render() {
-    console.log("newTrans", this.props);
+    console.log(this.state);
     return (
       <Grid.Column width={5}>
         <Segment>
