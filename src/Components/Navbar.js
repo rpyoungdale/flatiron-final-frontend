@@ -10,14 +10,14 @@ const Navbar = props => {
       </Menu.Item>
       {props.loggedIn ? (
         <Menu.Menu position="right">
-          <Menu.Item name="spending">
-            <Link to="/spending" style={{ color: "#000000" }}>
-              Spending
-            </Link>
-          </Menu.Item>
           <Menu.Item name="budget">
             <Link to="/budget" style={{ color: "#000000" }}>
               Budget
+            </Link>
+          </Menu.Item>
+          <Menu.Item name="spending">
+            <Link to="/spending" style={{ color: "#000000" }}>
+              Spending
             </Link>
           </Menu.Item>
           <Menu.Item name="trends">
