@@ -1,47 +1,63 @@
 import React from "react";
-import { Progress, Segment } from "semantic-ui-react";
+import { Progress, Segment, Button } from "semantic-ui-react";
 
 const BudgetCategory = props => {
-  if (props.spendingInfo.totalSpent / props.spendingInfo.limit > 1) {
+  if (props.category.totalSpent / props.category.limit > 1) {
     return (
       <Segment>
+        <h1>
+          {props.category.category}: ${props.category.limit} Limit
+        </h1>
+
         <Progress
           progress="value"
           value="You are over your limit!"
-          total={props.spendingInfo.limit}
+          total={props.category.limit}
         />
       </Segment>
     );
-  } else if (props.spendingInfo.totalSpent / props.spendingInfo.limit > 0.8) {
+  } else if (props.category.totalSpent / props.category.limit > 0.8) {
     return (
       <Segment>
+        <h1>
+          {props.category.category}: ${props.category.limit} Limit
+        </h1>
+
         <Progress
           error
           progress="value"
-          value={props.spendingInfo.totalSpent}
-          total={props.spendingInfo.limit}
+          value={props.category.totalSpent}
+          total={props.category.limit}
         />
       </Segment>
     );
-  } else if (props.spendingInfo.totalSpent / props.spendingInfo.limit > 0.5) {
+  } else if (props.category.totalSpent / props.category.limit > 0.5) {
     return (
       <Segment>
+        <h1>
+          {props.category.category}: ${props.category.limit} Limit
+        </h1>
+
         <Progress
           warning
           progress="value"
-          value={props.spendingInfo.totalSpent}
-          total={props.spendingInfo.limit}
+          value={props.category.totalSpent}
+          total={props.category.limit}
         />
       </Segment>
     );
   } else {
     return (
       <Segment>
+        <h1>
+          {props.category.category}: ${props.category.limit} Limit
+        </h1>
+
         <Progress
           success
           progress="value"
-          value={props.spendingInfo.totalSpent}
-          total={props.spendingInfo.limit}
+          value={props.category.totalSpent}
+          total={props.category.limit}
         />
       </Segment>
     );
