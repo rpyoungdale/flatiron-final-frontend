@@ -2,6 +2,7 @@ import React from "react";
 import BudgetCategory from "../Components/BudgetCategory";
 import Transaction from "../Components/Transaction";
 import NewTransactionForm from "../Components/NewTransactionForm";
+import NewCategoryForm from "../Components/NewCategoryForm";
 import { Segment, Grid, Button, Header, Popup } from "semantic-ui-react";
 import CSVReader from "react-csv-reader";
 
@@ -58,17 +59,25 @@ class BudgetContainer extends React.Component {
                 <h1>Welcome, {currentUser.first_name}!</h1>
                 <h2>Current Balance: ${currentUser.budget.balance}</h2>
                 {categorySpendingBreakdown.map(category => {
-                  return <BudgetCategory category={category} />;
+                  return (
+                    <BudgetCategory
+                      key={category.category}
+                      category={category}
+                    />
+                  );
                 })}
               </div>
             ) : null}
           </Segment>
         </Grid.Column>
-        <NewTransactionForm
-          // addedTrans={this.props.addedTrans}
-          dropdownCategories={this.state.dropdownCategories}
-          currentUser={this.props.currentUser}
-        />
+        <Grid.Column width={5}>
+          <NewTransactionForm
+            // addedTrans={this.props.addedTrans}
+            dropdownCategories={this.state.dropdownCategories}
+            currentUser={this.props.currentUser}
+          />
+          <NewCategoryForm currentUser={this.props.currentUser} />
+        </Grid.Column>
         <Grid.Column width={1} />
       </Grid>
     );
@@ -92,17 +101,16 @@ class BudgetContainer extends React.Component {
 //   );
 // })}
 
-// handleForce = (data) => {
+// handleForce = data => {
 //   console.log(data);
-// }
+// };
 //
-// <div className="container">
+// <Segment className="container">
 //   <CSVReader
 //     cssClass="react-csv-input"
-//     label="Select CSV with secret Death Star statistics"
+//     label="Select CSV"
 //     onFileLoaded={this.handleForce}
 //   />
-//   <p>and then open the console</p>
-// </div>
+// </Segment>
 
 export default BudgetContainer;

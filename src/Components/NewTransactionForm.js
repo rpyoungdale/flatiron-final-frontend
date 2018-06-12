@@ -58,41 +58,34 @@ class NewTransactionForm extends React.Component {
   render() {
     console.log("newTrans", this.props);
     return (
-      <Grid.Column width={5}>
-        <Segment>
-          <h1>Add New Purchase</h1>
-          <Form onSubmit={this.persistTransaction}>
-            <Form.Field required inline>
-              <label>Merchant</label>
-              <Input
-                placeholder="$"
-                name="merchant"
-                onChange={this.handleChange}
-              />
-            </Form.Field>
-            <Form.Field required inline>
-              <label>Amount</label>
-              <Input
-                placeholder="$"
-                name="amount"
-                onChange={this.handleChange}
-              />
-            </Form.Field>
-
-            <label>Category</label>
-            <Dropdown
-              id="dropdown"
-              placeholder="Select Category"
-              fluid
-              search
-              selection
-              options={this.props.dropdownCategories}
+      <Segment>
+        <h1>Add New Purchase</h1>
+        <Form onSubmit={this.persistTransaction}>
+          <Form.Field required inline>
+            <label>Merchant</label>
+            <Input
+              placeholder="$"
+              name="merchant"
+              onChange={this.handleChange}
             />
+          </Form.Field>
+          <Form.Field required inline>
+            <label>Amount</label>
+            <Input placeholder="$" name="amount" onChange={this.handleChange} />
+          </Form.Field>
 
-            <Button>Add</Button>
-          </Form>
-        </Segment>
-      </Grid.Column>
+          <label>Category</label>
+          <Dropdown
+            id="dropdown"
+            placeholder="Select Category"
+            fluid
+            search
+            selection
+            options={this.props.dropdownCategories}
+          />
+          <Button>Add</Button>
+        </Form>
+      </Segment>
     );
   }
 }

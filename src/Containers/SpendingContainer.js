@@ -7,85 +7,165 @@ class SpendingContainer extends React.Component {
     super();
 
     this.state = {
-      colors: ["#EDC7B7", "#EEE2DC", "#BAB2B5", "#123C69", "#AC3B61"],
-      labels: [],
+      colors: [
+        "#EDC7B7",
+        "#EEE2DC",
+        "#BAB2B5",
+        "#123C69",
+        "#AC3B61",
+        "#25274D",
+        "#464866",
+        "#AAABB8",
+        "#2E9CCA",
+        "#29648A",
+        "#17252A",
+        "#2B7A78",
+        "#3AAFA9",
+        "#DEF2F1"
+      ],
+      categoryLabels: [],
+      merchantLabels: [],
       data: [],
-      ctx: ""
+      ctx: "",
+      categoryView: true
     };
   }
 
   componentDidMount() {
     console.log("doughnut", this.props);
     var ctx = document.getElementById("myChart").getContext("2d");
-    let labels = this.props.categorySpendingBreakdown.map(cat => {
+    let categoryLabels = this.props.categorySpendingBreakdown.map(cat => {
       return `${cat.category}: $${cat.totalSpent}`;
     });
-    // let data = this.props.currentUser.budget.transactions.
+    let merchantLabels = this.props.merchantSpendingBreakdown.map(merchant => {
+      return `${merchant.merchant}: $${merchant.totalSpent}`;
+    });
+    let categoryData = this.props.categorySpendingBreakdown.map(cat => {
+      return cat.totalSpent;
+    });
+    let merchantData = this.props.merchantSpendingBreakdown.map(merchant => {
+      return merchant.totalSpent;
+    });
 
     this.setState({
-      labels: labels,
+      categoryLabels: categoryLabels,
+      merchantLabels: merchantLabels,
+      categoryData: categoryData,
+      merchantData: merchantData,
       ctx: ctx
     });
   }
 
+  categoryView = () => {
+    this.setState({
+      categoryView: true
+    });
+  };
+
+  merchantView = () => {
+    this.setState({
+      categoryView: false
+    });
+  };
+
   render() {
     // debugger;
-
-    var chart = new Chart(this.state.ctx, {
-      // The type of chart we want to create
-      type: "doughnut",
-
-      // The data for our dataset
-      data: {
-        labels: this.state.labels,
-        datasets: [
-          {
-            label: "My First dataset",
-            backgroundColor: this.state.colors,
-            borderColor: "rgb(255, 255, 255)",
-            data: [7, 10, 5, 2, 20]
-          }
-        ]
-      },
-      options: {
-        cutoutPercentage: 60,
-        animation: {
-          animateScale: true
-        },
-        tooltips: {
-          callbacks: {
-            label: function(tooltipItem, data) {
-              var dataset = data.datasets[tooltipItem.datasetIndex];
-              var total = dataset.data.reduce(function(
-                previousValue,
-                currentValue,
-                currentIndex,
-                array
-              ) {
-                return previousValue + currentValue;
-              });
-              var currentValue = dataset.data[tooltipItem.index];
-              var percentage = Math.floor(currentValue / total * 100 + 0.5);
-              return percentage + "%";
+    this.state.categoryView
+      ? new Chart(this.state.ctx, {
+          type: "doughnut",
+          data: {
+            labels: this.state.categoryLabels,
+            datasets: [
+              {
+                label: "My First dataset",
+                backgroundColor: this.state.colors,
+                borderColor: "rgb(255, 255, 255)",
+                data: this.state.categoryData
+              }
+            ]
+          },
+          options: {
+            cutoutPercentage: 60,
+            animation: {
+              animateScale: true
+            },
+            tooltips: {
+              callbacks: {
+                label: function(tooltipItem, data) {
+                  var dataset = data.datasets[tooltipItem.datasetIndex];
+                  var total = dataset.data.reduce(function(
+                    previousValue,
+                    currentValue,
+                    currentIndex,
+                    array
+                  ) {
+                    return previousValue + currentValue;
+                  });
+                  var currentValue = dataset.data[tooltipItem.index];
+                  var percentage = Math.floor(currentValue / total * 100 + 0.5);
+                  return percentage + "%";
+                }
+              }
             }
           }
-        }
-      }
-    });
+        })
+      : new Chart(this.state.ctx, {
+          type: "doughnut",
+          data: {
+            labels: this.state.merchantLabels,
+            datasets: [
+              {
+                label: "My First dataset",
+                backgroundColor: this.state.colors,
+                borderColor: "rgb(255, 255, 255)",
+                data: this.state.merchantData
+              }
+            ]
+          },
+          options: {
+            cutoutPercentage: 60,
+            animation: {
+              animateScale: true
+            },
+            tooltips: {
+              callbacks: {
+                label: function(tooltipItem, data) {
+                  var dataset = data.datasets[tooltipItem.datasetIndex];
+                  var total = dataset.data.reduce(function(
+                    previousValue,
+                    currentValue,
+                    currentIndex,
+                    array
+                  ) {
+                    return previousValue + currentValue;
+                  });
+                  var currentValue = dataset.data[tooltipItem.index];
+                  var percentage = Math.floor(currentValue / total * 100 + 0.5);
+                  return percentage + "%";
+                }
+              }
+            }
+          }
+        });
     return (
       <Grid divided>
         <Grid.Column width={1} />
         <Grid.Column width={4}>
           <Menu fluid vertical>
-            <Menu.Header>Products</Menu.Header>
+            <Menu.Header>
+              <h1>Sort By</h1>
+            </Menu.Header>
 
             <Menu.Menu>
-              <Menu.Item name="enterprise" onClick={this.handleItemClick} />
-              <Menu.Item name="consumer" onClick={this.handleItemClick} />
+              <h2>
+                <Menu.Item name="Category" onClick={this.categoryView} />
+                <Menu.Item name="Merchant" onClick={this.merchantView} />
+              </h2>
             </Menu.Menu>
           </Menu>
         </Grid.Column>
         <Grid.Column width={10}>
+          <h1>Spending Breakdown</h1>
           <canvas id="myChart" />
         </Grid.Column>
         <Grid.Column width={1} />

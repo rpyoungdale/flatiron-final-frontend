@@ -1,5 +1,5 @@
 import React from "react";
-import { Progress, Segment, Button } from "semantic-ui-react";
+import { Progress, Segment } from "semantic-ui-react";
 
 const BudgetCategory = props => {
   if (props.category.totalSpent / props.category.limit > 1) {
