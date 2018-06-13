@@ -24,7 +24,7 @@ class NewTransactionForm extends React.Component {
   componentDidMount() {
     this.props.currentUser.first_name
       ? this.setState({
-          categories: this.props.currentUser.budget.categories
+          categories: this.props.chosenBudget.categories
         })
       : null;
   }

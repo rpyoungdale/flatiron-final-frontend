@@ -25,6 +25,11 @@ const Navbar = props => {
               Trends
             </Link>
           </Menu.Item>
+          <Menu.Item name="budgetImport">
+            <Link to="/import" style={{ color: "#000000" }}>
+              Import
+            </Link>
+          </Menu.Item>
           <Menu.Item name="login">
             <Link
               to="/login"

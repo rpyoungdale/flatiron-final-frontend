@@ -55,14 +55,15 @@ class BudgetContainer extends React.Component {
   }
 
   componentDidMount() {
+    // debugger;
     let dropdown = [];
 
     this.props.currentUser.budget
-      ? this.props.currentUser.budget.categories.forEach(cat =>
+      ? this.props.chosenBudget.categories.forEach(cat =>
           dropdown.push({ key: cat.id, value: cat.name, text: cat.name })
         )
       : null;
-
+    // debugger;
     this.props.currentUser.budget
       ? this.setState({
           dropdownCategories: dropdown
@@ -148,6 +149,7 @@ class BudgetContainer extends React.Component {
         <Grid.Column width={5} style={{ paddingTop: 100 }}>
           <NewTransactionForm
             // addedTrans={this.props.addedTrans}
+            chosenBudget={this.props.chosenBudget}
             dropdownCategories={this.state.dropdownCategories}
             currentUser={this.props.currentUser}
           />
@@ -188,17 +190,5 @@ class BudgetContainer extends React.Component {
 //     </div>
 //   );
 // })}
-
-// handleForce = data => {
-//   console.log(data);
-// };
-//
-// <Segment className="container">
-//   <CSVReader
-//     cssClass="react-csv-input"
-//     label="Select CSV"
-//     onFileLoaded={this.handleForce}
-//   />
-// </Segment>
 
 export default BudgetContainer;
