@@ -29,7 +29,8 @@ class App extends Component {
       firstTimeUser: false,
       currentUser: {},
       categorySpendingBreakdown: [],
-      merchantSpendingBreakdown: []
+      merchantSpendingBreakdown: [],
+      chosenBudget: {}
     };
   }
 
@@ -76,8 +77,10 @@ class App extends Component {
   }
 
   reshapeState = json => {
+    // debugger;
     let categorySpending = [];
     let merchants = [];
+    json.budget = json.budgets[0];
     json.budget.categories.forEach(category => {
       let totalSpent = 0;
       let matchingTrans = json.budget.transactions.filter(transaction => {
@@ -114,7 +117,8 @@ class App extends Component {
       currentUser: json,
       loggedIn: true,
       categorySpendingBreakdown: categorySpending,
-      merchantSpendingBreakdown: merchantSpending
+      merchantSpendingBreakdown: merchantSpending,
+      chosenBudget: json.budgets[0]
     });
   };
 
@@ -133,6 +137,50 @@ class App extends Component {
     });
   };
 
+  changeChosenBudget = budget => {
+    // debugger;
+    let categorySpending = [];
+    let merchants = [];
+    debugger;
+    budget.categories.forEach(category => {
+      let totalSpent = 0;
+      let matchingTrans = budget.transactions.filter(transaction => {
+        return transaction.category_id === category.id;
+      });
+      matchingTrans.forEach(trans => (totalSpent += parseFloat(trans.amount)));
+      categorySpending.push({
+        category: category.name,
+        limit: category.limit,
+        totalSpent: totalSpent,
+        transactions: matchingTrans
+      });
+    });
+
+    budget.transactions.forEach(trans => {
+      merchants.push(trans.merchant);
+    });
+
+    let filteredMerchants = merchants.filter(this.onlyUnique);
+    let merchantSpending = [];
+    filteredMerchants.forEach(merchant => {
+      let totalSpent = 0;
+      let matchingTrans = budget.transactions.filter(transaction => {
+        return merchant === transaction.merchant;
+      });
+      matchingTrans.forEach(trans => (totalSpent += parseFloat(trans.amount)));
+      merchantSpending.push({
+        merchant: merchant,
+        totalSpent: totalSpent
+      });
+    });
+
+    this.setState({
+      categorySpendingBreakdown: categorySpending,
+      merchantSpendingBreakdown: merchantSpending,
+      chosenBudget: budget
+    });
+  };
+
   // addedTrans = () => {
   //   debugger;
   //   this.setState({
@@ -141,7 +189,7 @@ class App extends Component {
   // };
 
   render() {
-    console.log(this.state);
+    console.log("app", this.state);
     // debugger
     return (
       <BrowserRouter>
@@ -164,15 +212,18 @@ class App extends Component {
               />
             ) : (
               <div>
+                <Redirect to="/budget" />
                 <Route
                   exact
                   path="/budget"
                   render={() => (
                     <BudgetContainer
                       currentUser={this.state.currentUser}
+                      chosenBudget={this.state.chosenBudget}
                       categorySpendingBreakdown={
                         this.state.categorySpendingBreakdown
                       }
+                      changeChosenBudget={this.changeChosenBudget}
                     />
                   )}
                 />
@@ -211,8 +262,5 @@ class App extends Component {
     );
   }
 }
-
-// <Route exact path="/login" render={() => <LoginContainer />} />
-// <Route exact path="/login" render={() => <LoginContainer />} />
 
 export default App;
