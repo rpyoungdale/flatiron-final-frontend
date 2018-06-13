@@ -82,7 +82,7 @@ class LoginContainer extends React.Component {
     return (
       <Grid>
         <Grid.Column width={4} />
-        <Grid.Column width={8}>
+        <Grid.Column width={8} style={{ paddingTop: 200 }}>
           <Segment>
             {this.state.newUser ? (
               <Form>
@@ -153,9 +153,7 @@ class LoginContainer extends React.Component {
                 </Form.Group>
                 <Form.Checkbox label="I agree to the Terms and Conditions" />
                 <Button onClick={this.login} type="submit">
-                  <Link to="/budget" style={{ color: "#000000" }}>
-                    Login
-                  </Link>
+                  Login
                 </Button>
                 <br />
                 <br />

@@ -150,7 +150,7 @@ class SpendingContainer extends React.Component {
     return (
       <Grid divided>
         <Grid.Column width={1} />
-        <Grid.Column width={4}>
+        <Grid.Column width={4} style={{ paddingTop: 100 }}>
           <Menu fluid vertical>
             <Menu.Header>
               <h1>Sort By</h1>
@@ -164,7 +164,7 @@ class SpendingContainer extends React.Component {
             </Menu.Menu>
           </Menu>
         </Grid.Column>
-        <Grid.Column width={10}>
+        <Grid.Column width={10} style={{ paddingTop: 100 }}>
           <h1>Spending Breakdown</h1>
           <canvas id="myChart" />
         </Grid.Column>

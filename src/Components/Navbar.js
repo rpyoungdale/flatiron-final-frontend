@@ -4,7 +4,7 @@ import { Menu } from "semantic-ui-react";
 
 const Navbar = props => {
   return (
-    <Menu size="huge" borderless>
+    <Menu size="huge" borderless fixed="top">
       <Menu.Item name="appName">
         <h3>AppName</h3>
       </Menu.Item>
