@@ -161,6 +161,7 @@ class SpendingContainer extends React.Component {
                 <Menu.Item name="Category" onClick={this.categoryView} />
                 <Menu.Item name="Merchant" onClick={this.merchantView} />
               </h2>
+              <p>*Merchant not available for CSV import</p>
             </Menu.Menu>
           </Menu>
         </Grid.Column>

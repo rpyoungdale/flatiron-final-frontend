@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import BudgetContainer from "./Containers/BudgetContainer";
 import Navbar from "./Components/Navbar";
+import CSVImport from "./Components/CSVImport";
 import LoginContainer from "./Containers/LoginContainer";
 import SpendingContainer from "./Containers/SpendingContainer";
 import UserSetUp from "./Containers/UserSetUp";
@@ -141,7 +142,7 @@ class App extends Component {
     // debugger;
     let categorySpending = [];
     let merchants = [];
-    debugger;
+    // debugger;
     budget.categories.forEach(category => {
       let totalSpent = 0;
       let matchingTrans = budget.transactions.filter(transaction => {
@@ -240,6 +241,13 @@ class App extends Component {
                         this.state.merchantSpendingBreakdown
                       }
                     />
+                  )}
+                />
+                <Route
+                  exact
+                  path="/import"
+                  render={() => (
+                    <CSVImport currentUser={this.state.currentUser} />
                   )}
                 />
               </div>

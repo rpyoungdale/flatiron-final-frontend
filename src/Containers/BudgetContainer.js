@@ -55,17 +55,23 @@ class BudgetContainer extends React.Component {
   }
 
   componentDidMount() {
+    var today = new Date();
+    var year = today.getFullYear();
+    var month = today.getMonth();
+
     let dropdown = [];
 
     this.props.currentUser.budget
-      ? this.props.currentUser.budget.categories.forEach(cat =>
+      ? this.props.chosenBudget.categories.forEach(cat =>
           dropdown.push({ key: cat.id, value: cat.name, text: cat.name })
         )
       : null;
-
+    // debugger;
     this.props.currentUser.budget
       ? this.setState({
-          dropdownCategories: dropdown
+          dropdownCategories: dropdown,
+          chosenYear: `${year}`,
+          chosenMonth: this.state.months[month].value
         })
       : null;
   }
@@ -119,6 +125,7 @@ class BudgetContainer extends React.Component {
                     scrolling
                     options={this.state.months}
                     onChange={this.updateMonth}
+                    value={this.state.chosenMonth}
                     style={{ paddingRight: 10 }}
                   />
                   <Dropdown
@@ -126,6 +133,7 @@ class BudgetContainer extends React.Component {
                     scrolling
                     options={this.state.years}
                     onChange={this.updateYear}
+                    value={this.state.chosenYear}
                   />
                   <Button>Go</Button>
                 </Form>
@@ -148,6 +156,7 @@ class BudgetContainer extends React.Component {
         <Grid.Column width={5} style={{ paddingTop: 100 }}>
           <NewTransactionForm
             // addedTrans={this.props.addedTrans}
+            chosenBudget={this.props.chosenBudget}
             dropdownCategories={this.state.dropdownCategories}
             currentUser={this.props.currentUser}
           />
@@ -188,17 +197,5 @@ class BudgetContainer extends React.Component {
 //     </div>
 //   );
 // })}
-
-// handleForce = data => {
-//   console.log(data);
-// };
-//
-// <Segment className="container">
-//   <CSVReader
-//     cssClass="react-csv-input"
-//     label="Select CSV"
-//     onFileLoaded={this.handleForce}
-//   />
-// </Segment>
 
 export default BudgetContainer;
