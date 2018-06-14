@@ -54,7 +54,7 @@ class NewTransactionForm extends React.Component {
         Authorization: `Bearer ${localStorage.getItem("token")}`
       }
     }).then(res => res.json());
-    // this.props.addedTrans()
+    this.props.addedTrans();
   };
 
   handleChange = e => {

@@ -35,7 +35,9 @@ class SpendingContainer extends React.Component {
     console.log("doughnut", this.props);
     var ctx = document.getElementById("myChart").getContext("2d");
     let categoryLabels = this.props.categorySpendingBreakdown.map(cat => {
-      return `${cat.category}: $${cat.totalSpent}`;
+      return `${cat.category}: $${this.numberWithCommas(
+        parseFloat(cat.totalSpent).toFixed(2)
+      )}`;
     });
     let merchantLabels = this.props.merchantSpendingBreakdown.map(merchant => {
       return `${merchant.merchant}: $${merchant.totalSpent}`;
@@ -66,6 +68,12 @@ class SpendingContainer extends React.Component {
     this.setState({
       categoryView: false
     });
+  };
+
+  numberWithCommas = x => {
+    var parts = x.toString().split(".");
+    parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    return parts.join(".");
   };
 
   render() {

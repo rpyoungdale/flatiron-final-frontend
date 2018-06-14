@@ -31,7 +31,8 @@ class App extends Component {
       currentUser: {},
       categorySpendingBreakdown: [],
       merchantSpendingBreakdown: [],
-      chosenBudget: {}
+      chosenBudget: {},
+      addedTrans: false
     };
   }
 
@@ -48,6 +49,28 @@ class App extends Component {
       })
         .then(res => res.json())
         .then(json => this.reshapeState(json));
+    }
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    // debugger;
+    if (this.state.addedTrans) {
+      // debugger;
+      if (localStorage.getItem("token")) {
+        // debugger;
+        fetch(`${baseUrl}/user`, {
+          headers: {
+            "Content-Type": "application/json",
+            Accept: "application/json",
+            Authorization: `Bearer ${localStorage.getItem("token")}`
+          }
+        })
+          .then(res => res.json())
+          .then(json => this.reshapeState(json));
+        this.setState({
+          addedTrans: false
+        });
+      }
     }
   }
 
@@ -182,12 +205,12 @@ class App extends Component {
     });
   };
 
-  // addedTrans = () => {
-  //   debugger;
-  //   this.setState({
-  //     addedTrans: (this.state.addedTrans += 1)
-  //   });
-  // };
+  addedTrans = () => {
+    // debugger;
+    this.setState({
+      addedTrans: true
+    });
+  };
 
   render() {
     console.log("app", this.state);
@@ -219,6 +242,7 @@ class App extends Component {
                   path="/budget"
                   render={() => (
                     <BudgetContainer
+                      addedTrans={this.addedTrans}
                       currentUser={this.state.currentUser}
                       chosenBudget={this.state.chosenBudget}
                       categorySpendingBreakdown={

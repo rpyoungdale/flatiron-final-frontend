@@ -50,7 +50,9 @@ class BudgetContainer extends React.Component {
         { key: 2010, value: "2010", text: "2010" }
       ],
       chosenMonth: "",
-      chosenYear: ""
+      chosenYear: "",
+      grandTotalSpent: 0,
+      addedTrans: 0
     };
   }
 
@@ -60,6 +62,7 @@ class BudgetContainer extends React.Component {
     var month = today.getMonth();
 
     let dropdown = [];
+    let grandTotal = 0;
 
     this.props.currentUser.budget
       ? this.props.chosenBudget.categories.forEach(cat =>
@@ -72,6 +75,18 @@ class BudgetContainer extends React.Component {
           dropdownCategories: dropdown,
           chosenYear: `${year}`,
           chosenMonth: this.state.months[month].value
+        })
+      : null;
+
+    this.props.currentUser.budget
+      ? this.props.categorySpendingBreakdown.forEach(cat => {
+          grandTotal += cat.totalSpent;
+        })
+      : null;
+
+    this.props.currentUser.budget
+      ? this.setState({
+          grandTotalSpent: grandTotal
         })
       : null;
   }
@@ -109,9 +124,37 @@ class BudgetContainer extends React.Component {
       });
   };
 
+  numberWithCommas = x => {
+    var parts = x.toString().split(".");
+    parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    return parts.join(".");
+  };
+
+  // componentDidUpdate(prevProps) {
+  //   if (prevProps.addedTrans !== this.props.addedTrans) {
+  //
+  //   }
+  // }
+
+  // addedTrans = () => {
+  //   // debugger;
+  //   this.setState({
+  //     addedTrans: (this.state.addedTrans += 1)
+  //   });
+  // };
+
   render() {
     console.log("monthYear", this.state);
-    const { currentUser, categorySpendingBreakdown, chosenBudget } = this.props;
+    let spendingTotal = 0;
+    const {
+      currentUser,
+      categorySpendingBreakdown,
+      chosenBudget,
+      addedTrans
+    } = this.props;
+    chosenBudget.transactions.forEach(trans => {
+      spendingTotal += parseFloat(trans.amount);
+    });
     return (
       <Grid>
         <Grid.Column width={1} />
@@ -121,6 +164,11 @@ class BudgetContainer extends React.Component {
               <div>
                 <Form onSubmit={this.changeBudget}>
                   <Dropdown
+                    button
+                    className="icon"
+                    floating
+                    labeled
+                    icon="calendar"
                     placeholder="Select Month"
                     scrolling
                     options={this.state.months}
@@ -129,6 +177,10 @@ class BudgetContainer extends React.Component {
                     style={{ paddingRight: 10 }}
                   />
                   <Dropdown
+                    button
+                    className="icon"
+                    floating
+                    labeled
                     placeholder="Select Year"
                     scrolling
                     options={this.state.years}
@@ -140,7 +192,19 @@ class BudgetContainer extends React.Component {
                 <h1>
                   Budget: {chosenBudget.month}, {chosenBudget.year}
                 </h1>
-                <h2>Current Balance: ${chosenBudget.balance}</h2>
+                <h2>
+                  Starting Balance: ${this.numberWithCommas(
+                    parseFloat(chosenBudget.balance).toFixed(2)
+                  )}
+                </h2>
+                <h2>
+                  Left to Spend: ${this.numberWithCommas(
+                    (
+                      parseFloat(chosenBudget.balance) -
+                      parseFloat(spendingTotal)
+                    ).toFixed(2)
+                  )}
+                </h2>
                 {categorySpendingBreakdown.map(category => {
                   return (
                     <BudgetCategory
@@ -155,10 +219,10 @@ class BudgetContainer extends React.Component {
         </Grid.Column>
         <Grid.Column width={5} style={{ paddingTop: 100 }}>
           <NewTransactionForm
-            // addedTrans={this.props.addedTrans}
-            chosenBudget={this.props.chosenBudget}
+            addedTrans={addedTrans}
+            chosenBudget={chosenBudget}
             dropdownCategories={this.state.dropdownCategories}
-            currentUser={this.props.currentUser}
+            currentUser={currentUser}
           />
           <NewCategoryForm currentUser={this.props.currentUser} />
         </Grid.Column>
