@@ -29,6 +29,14 @@ class NewTransactionForm extends React.Component {
       : null;
   }
 
+  componentDidUpdate(prevProps) {
+    if (this.props.chosenBudget.id !== prevProps.chosenBudget.id) {
+      this.setState({
+        categories: this.props.chosenBudget.categories
+      });
+    }
+  }
+
   persistTransaction = e => {
     let category = this.state.categories.find(categ => {
       return categ.name === document.getElementById("dropdown").innerText;
@@ -56,7 +64,7 @@ class NewTransactionForm extends React.Component {
   };
 
   render() {
-    console.log("newTrans", this.props);
+    // console.log("newTrans", this.props);
     return (
       <Segment>
         <h1>Add New Purchase</h1>

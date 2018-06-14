@@ -55,7 +55,10 @@ class BudgetContainer extends React.Component {
   }
 
   componentDidMount() {
-    // debugger;
+    var today = new Date();
+    var year = today.getFullYear();
+    var month = today.getMonth();
+
     let dropdown = [];
 
     this.props.currentUser.budget
@@ -66,7 +69,9 @@ class BudgetContainer extends React.Component {
     // debugger;
     this.props.currentUser.budget
       ? this.setState({
-          dropdownCategories: dropdown
+          dropdownCategories: dropdown,
+          chosenYear: `${year}`,
+          chosenMonth: this.state.months[month].value
         })
       : null;
   }
@@ -120,6 +125,7 @@ class BudgetContainer extends React.Component {
                     scrolling
                     options={this.state.months}
                     onChange={this.updateMonth}
+                    value={this.state.chosenMonth}
                     style={{ paddingRight: 10 }}
                   />
                   <Dropdown
@@ -127,6 +133,7 @@ class BudgetContainer extends React.Component {
                     scrolling
                     options={this.state.years}
                     onChange={this.updateYear}
+                    value={this.state.chosenYear}
                   />
                   <Button>Go</Button>
                 </Form>
