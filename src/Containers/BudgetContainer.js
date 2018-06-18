@@ -10,7 +10,8 @@ import {
   Header,
   Popup,
   Dropdown,
-  Form
+  Form,
+  Message
 } from "semantic-ui-react";
 import CSVReader from "react-csv-reader";
 
@@ -52,7 +53,8 @@ class BudgetContainer extends React.Component {
       chosenMonth: "",
       chosenYear: "",
       grandTotalSpent: 0,
-      addedTrans: 0
+      addedTrans: 0,
+      visible: false
     };
   }
 
@@ -116,6 +118,18 @@ class BudgetContainer extends React.Component {
     });
   };
 
+  showMessage = () => {
+    this.setState({
+      visible: true
+    });
+  };
+
+  hideMessage = () => {
+    this.setState({
+      visible: false
+    });
+  };
+
   changeBudget = () => {
     fetch(`${baseUrl}/budgets`, {
       headers: {
@@ -133,7 +147,11 @@ class BudgetContainer extends React.Component {
             budget.year === this.state.chosenYear
           );
         });
-        this.props.changeChosenBudget(chosenBudget[0]);
+        if (chosenBudget.length) {
+          this.props.changeChosenBudget(chosenBudget[0]);
+        } else {
+          this.showMessage();
+        }
       });
   };
 
@@ -160,6 +178,14 @@ class BudgetContainer extends React.Component {
       <Grid>
         <Grid.Column width={1} />
         <Grid.Column width={9} style={{ paddingTop: 100 }}>
+          {this.state.visible ? (
+            <Message
+              negative
+              onDismiss={this.hideMessage}
+              header="Budget Not Found"
+              content="Please import a budget for this month."
+            />
+          ) : null}
           <Segment>
             {currentUser.first_name ? (
               <div>

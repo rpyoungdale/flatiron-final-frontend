@@ -86,44 +86,40 @@ class LoginContainer extends React.Component {
           <Segment>
             {this.state.newUser ? (
               <Form>
-                <Form.Group widths="equal">
-                  <Form.Input
-                    fluid
-                    label="First Name"
-                    name="firstName"
-                    value={this.state.first_name}
-                    onChange={e =>
-                      this.setState({ first_name: e.target.value })
-                    }
-                    placeholder="First Name"
-                  />
-                  <Form.Input
-                    fluid
-                    label="Last Name"
-                    name="lastName"
-                    value={this.state.last_name}
-                    onChange={e => this.setState({ last_name: e.target.value })}
-                    placeholder="Last Name"
-                  />
-                </Form.Group>
-                <Form.Group widths="equal">
-                  <Form.Input
-                    fluid
-                    label="Username"
-                    name="username"
-                    value={this.state.username}
-                    onChange={e => this.setState({ username: e.target.value })}
-                    placeholder="Username"
-                  />
-                  <Form.Input
-                    fluid
-                    label="Password"
-                    name="password"
-                    value={this.state.password}
-                    onChange={e => this.setState({ password: e.target.value })}
-                    placeholder="Password"
-                  />
-                </Form.Group>
+                <Form.Input
+                  fluid
+                  label="First Name"
+                  name="firstName"
+                  value={this.state.first_name}
+                  onChange={e => this.setState({ first_name: e.target.value })}
+                  placeholder="First Name"
+                />
+                <Form.Input
+                  fluid
+                  label="Last Name"
+                  name="lastName"
+                  value={this.state.last_name}
+                  onChange={e => this.setState({ last_name: e.target.value })}
+                  placeholder="Last Name"
+                />
+
+                <Form.Input
+                  fluid
+                  label="Username"
+                  name="username"
+                  value={this.state.username}
+                  onChange={e => this.setState({ username: e.target.value })}
+                  placeholder="Username"
+                />
+                <Form.Input
+                  fluid
+                  label="Password"
+                  name="password"
+                  value={this.state.password}
+                  onChange={e => this.setState({ password: e.target.value })}
+                  placeholder="Password"
+                />
+
                 <Form.Checkbox label="I agree to the Terms and Conditions" />
                 <Button type="submit" onClick={e => this.saveUser(e)}>
                   <Link to="/setup" style={{ color: "#000000" }}>
@@ -146,6 +142,7 @@ class LoginContainer extends React.Component {
                     fluid
                     label="Password"
                     name="password"
+                    type="password"
                     value={this.state.password}
                     onChange={e => this.setState({ password: e.target.value })}
                     placeholder="Password"
