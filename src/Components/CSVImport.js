@@ -1,13 +1,14 @@
 import React from "react";
 import CSVReader from "react-csv-reader";
-import { Segment } from "semantic-ui-react";
+import { Segment, Progress, Button, Grid } from "semantic-ui-react";
 import { CSVLink, CSVDownload } from "react-csv";
 
 const baseUrl = "http://localhost:3000";
 
 class CSVImport extends React.Component {
   state = {
-    uploaded: false
+    uploaded: false,
+    percent: 0
   };
 
   uploadBudget = data => {
@@ -27,6 +28,7 @@ class CSVImport extends React.Component {
     })
       .then(res => res.json())
       .then(budgetJson => this.uploadCategories(budgetJson, data));
+    this.toggle();
   };
 
   uploadCategories = (budgetJson, data) => {
@@ -70,6 +72,7 @@ class CSVImport extends React.Component {
         .then(res => res.json())
         .then((counter += 1));
     }
+    this.props.uploaded();
     this.setState({
       uploaded: true
     });
@@ -78,6 +81,8 @@ class CSVImport extends React.Component {
   uploadTransaction = (categoryJson, newData, secondCounter) => {
     debugger;
   };
+
+  toggle = () => this.setState({ percent: this.state.percent === 0 ? 100 : 0 });
 
   render() {
     const prettyLink = {
@@ -115,23 +120,27 @@ class CSVImport extends React.Component {
       ["Amount Spent", ""]
     ];
     return (
-      <div style={{ paddingTop: 200 }}>
-        <Segment className="container">
-          <CSVReader
-            cssClass="react-csv-input"
-            label="Select CSV"
-            onFileLoaded={this.uploadBudget}
-          />
-          {this.state.uploaded ? <h2>Imported Successfully!</h2> : null}
-        </Segment>
-        <Segment>
-          Download{" "}
-          <CSVLink data={data} style={prettyLink}>
-            CSV ⬇
-          </CSVLink>{" "}
-          to download CSV Template
-        </Segment>
-      </div>
+      <Grid style={{ paddingTop: 200 }}>
+        <Grid.Column width={4} />
+        <Grid.Column width={8}>
+          <Segment className="container">
+            <CSVReader
+              cssClass="react-csv-input"
+              label="Select CSV"
+              onFileLoaded={this.uploadBudget}
+            />
+            <Progress percent={this.state.percent} autoSuccess />
+            {this.state.uploaded ? <h2>Imported Successfully!</h2> : null}
+          </Segment>
+          <Segment>
+            <CSVLink data={data} style={prettyLink}>
+              ⬇
+            </CSVLink>{" "}
+            to download CSV Template
+          </Segment>
+        </Grid.Column>
+        <Grid.Column width={4} />
+      </Grid>
     );
   }
 }

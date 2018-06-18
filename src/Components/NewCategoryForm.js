@@ -26,7 +26,7 @@ class NewCategoryForm extends React.Component {
       body: JSON.stringify({
         name: this.state.name,
         limit: this.state.limit,
-        budget_id: this.props.currentUser.id
+        budget_id: this.props.chosenBudget.id
       }),
       headers: {
         Accept: "application/json",
@@ -36,6 +36,7 @@ class NewCategoryForm extends React.Component {
     })
       .then(res => res.json())
       .then(json => console.log(json));
+    this.props.addedCategory();
   };
 
   handleChange = e => {
@@ -45,10 +46,11 @@ class NewCategoryForm extends React.Component {
   };
 
   render() {
+    console.log("category", this.props);
     return (
       <Segment>
         <Form onSubmit={this.persistCategory}>
-          <h1>Add New Category</h1>
+          <h4>Track New Category</h4>
           <Form.Field inline>
             <label>Category Name</label>
             <Input

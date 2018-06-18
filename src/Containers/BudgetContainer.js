@@ -56,18 +56,31 @@ class BudgetContainer extends React.Component {
     };
   }
 
+  onlyUnique(value, index, self) {
+    return self.indexOf(value) === index;
+  }
+
   componentDidMount() {
     var today = new Date();
     var year = today.getFullYear();
     var month = today.getMonth();
 
     let dropdown = [];
+    let filterDrop = [];
     let grandTotal = 0;
 
     this.props.currentUser.budget
-      ? this.props.chosenBudget.categories.forEach(cat =>
-          dropdown.push({ key: cat.id, value: cat.name, text: cat.name })
-        )
+      ? this.props.currentUser.budgets.forEach(budget => {
+          budget.categories.forEach(cat => {
+            // debugger;
+            if (filterDrop.includes(cat.name)) {
+              null;
+            } else {
+              dropdown.push({ key: cat.id, value: cat.name, text: cat.name });
+              filterDrop.push(cat.name);
+            }
+          });
+        })
       : null;
     // debugger;
     this.props.currentUser.budget
@@ -130,27 +143,15 @@ class BudgetContainer extends React.Component {
     return parts.join(".");
   };
 
-  // componentDidUpdate(prevProps) {
-  //   if (prevProps.addedTrans !== this.props.addedTrans) {
-  //
-  //   }
-  // }
-
-  // addedTrans = () => {
-  //   // debugger;
-  //   this.setState({
-  //     addedTrans: (this.state.addedTrans += 1)
-  //   });
-  // };
-
   render() {
-    console.log("monthYear", this.state);
+    console.log("monthYear", this.props);
     let spendingTotal = 0;
     const {
       currentUser,
       categorySpendingBreakdown,
       chosenBudget,
-      addedTrans
+      addedTrans,
+      addedCategory
     } = this.props;
     chosenBudget.transactions.forEach(trans => {
       spendingTotal += parseFloat(trans.amount);
@@ -224,7 +225,11 @@ class BudgetContainer extends React.Component {
             dropdownCategories={this.state.dropdownCategories}
             currentUser={currentUser}
           />
-          <NewCategoryForm currentUser={this.props.currentUser} />
+          <NewCategoryForm
+            addedCategory={addedCategory}
+            chosenBudget={chosenBudget}
+            currentUser={this.props.currentUser}
+          />
         </Grid.Column>
         <Grid.Column width={1} />
       </Grid>

@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import BudgetContainer from "./Containers/BudgetContainer";
 import Navbar from "./Components/Navbar";
 import CSVImport from "./Components/CSVImport";
+import TrendsContainer from "./Containers/TrendsContainer";
 import LoginContainer from "./Containers/LoginContainer";
 import SpendingContainer from "./Containers/SpendingContainer";
 import UserSetUp from "./Containers/UserSetUp";
@@ -32,7 +33,9 @@ class App extends Component {
       categorySpendingBreakdown: [],
       merchantSpendingBreakdown: [],
       chosenBudget: {},
-      addedTrans: false
+      addedTrans: false,
+      addedCategory: false,
+      uploaded: false
     };
   }
 
@@ -54,7 +57,7 @@ class App extends Component {
 
   componentDidUpdate(prevProps, prevState) {
     // debugger;
-    if (this.state.addedTrans) {
+    if (this.state.addedTrans || this.state.uploaded !== prevState.uploaded) {
       // debugger;
       if (localStorage.getItem("token")) {
         // debugger;
@@ -69,6 +72,22 @@ class App extends Component {
           .then(json => this.reshapeState(json));
         this.setState({
           addedTrans: false
+        });
+      }
+    } else if (this.state.addedCategory) {
+      if (localStorage.getItem("token")) {
+        // debugger;
+        fetch(`${baseUrl}/user`, {
+          headers: {
+            "Content-Type": "application/json",
+            Accept: "application/json",
+            Authorization: `Bearer ${localStorage.getItem("token")}`
+          }
+        })
+          .then(res => res.json())
+          .then(json => this.reshapeState(json));
+        this.setState({
+          addedCategory: false
         });
       }
     }
@@ -212,6 +231,19 @@ class App extends Component {
     });
   };
 
+  addedCategory = () => {
+    // debugger;
+    this.setState({
+      addedCategory: true
+    });
+  };
+
+  changeUploaded = () => {
+    this.setState({
+      uploaded: !this.state.uploaded
+    });
+  };
+
   render() {
     console.log("app", this.state);
     // debugger
@@ -243,6 +275,7 @@ class App extends Component {
                   render={() => (
                     <BudgetContainer
                       addedTrans={this.addedTrans}
+                      addedCategory={this.addedCategory}
                       currentUser={this.state.currentUser}
                       chosenBudget={this.state.chosenBudget}
                       categorySpendingBreakdown={
@@ -271,7 +304,20 @@ class App extends Component {
                   exact
                   path="/import"
                   render={() => (
-                    <CSVImport currentUser={this.state.currentUser} />
+                    <CSVImport
+                      uploaded={this.changeUploaded}
+                      currentUser={this.state.currentUser}
+                    />
+                  )}
+                />
+                <Route
+                  exact
+                  path="/trends"
+                  render={() => (
+                    <TrendsContainer
+                      uploaded={this.state.uploaded}
+                      currentUser={this.state.currentUser}
+                    />
                   )}
                 />
               </div>
