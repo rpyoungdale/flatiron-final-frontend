@@ -8,7 +8,7 @@ const numberWithCommas = x => {
 };
 
 const BudgetCategory = props => {
-  if (props.category.totalSpent / props.category.limit > 1) {
+  if (props.category.totalSpent / props.category.limit > 0.75) {
     return (
       <Segment>
         <h1>
@@ -17,13 +17,15 @@ const BudgetCategory = props => {
               props.category.limit - props.category.totalSpent
             ).toFixed(2)
           )}{" "}
-          Remaining
+          Over Budget
         </h1>
 
         <Progress
-          progress="value"
-          value="You are over your limit!"
-          total={props.category.limit}
+          error
+          progress="percent"
+          percent={parseInt(
+            props.category.totalSpent / props.category.limit * 100
+          )}
         />
       </Segment>
     );
@@ -41,11 +43,10 @@ const BudgetCategory = props => {
 
         <Progress
           error
-          progress="value"
-          value={numberWithCommas(
-            parseFloat(props.category.totalSpent).toFixed(2)
+          progress="percent"
+          percent={parseInt(
+            props.category.totalSpent / props.category.limit * 100
           )}
-          total={props.category.limit}
         />
       </Segment>
     );
@@ -63,11 +64,10 @@ const BudgetCategory = props => {
 
         <Progress
           warning
-          progress="value"
-          value={numberWithCommas(
-            parseFloat(props.category.totalSpent).toFixed(2)
+          progress="percent"
+          percent={parseInt(
+            props.category.totalSpent / props.category.limit * 100
           )}
-          total={props.category.limit}
         />
       </Segment>
     );
@@ -85,15 +85,35 @@ const BudgetCategory = props => {
 
         <Progress
           success
-          progress="value"
-          value={numberWithCommas(
-            parseFloat(props.category.totalSpent).toFixed(2)
+          progress="percent"
+          percent={parseInt(
+            props.category.totalSpent / props.category.limit * 100
           )}
-          total={props.category.limit}
         />
       </Segment>
     );
   }
 };
+
+// if (props.category.totalSpent / props.category.limit > 1) {
+//   return (
+//     <Segment>
+//       <h1>
+//         {props.category.category}: ${numberWithCommas(
+//           parseFloat(
+//             props.category.limit - props.category.totalSpent
+//           ).toFixed(2)
+//         )}{" "}
+//         Remaining
+//       </h1>
+//
+//       <Progress
+//         progress="percent"
+//         value="You are over your limit!"
+//         total={props.category.limit}
+//       />
+//     </Segment>
+//   );
+// } else
 
 export default BudgetCategory;

@@ -67,7 +67,7 @@ class NewTransactionForm extends React.Component {
     // console.log("newTrans", this.props);
     return (
       <Segment>
-        <h1>Add New Purchase</h1>
+        <h4>Add New Purchase</h4>
         <Form onSubmit={this.persistTransaction}>
           <Form.Field required inline>
             <label>Merchant</label>
