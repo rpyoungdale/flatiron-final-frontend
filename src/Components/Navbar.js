@@ -6,7 +6,7 @@ const Navbar = props => {
   return (
     <Menu size="huge" borderless fixed="top">
       <Menu.Item name="appName">
-        <h3>AppName</h3>
+        <h3>SpearMint</h3>
       </Menu.Item>
       {props.loggedIn ? (
         <Menu.Menu position="right">
@@ -20,9 +20,9 @@ const Navbar = props => {
               Spending
             </Link>
           </Menu.Item>
-          <Menu.Item name="trends">
-            <Link to="/trends" style={{ color: "#000000" }}>
-              Trends
+          <Menu.Item name="savings">
+            <Link to="/savings" style={{ color: "#000000" }}>
+              Savings
             </Link>
           </Menu.Item>
           <Menu.Item name="budgetImport">

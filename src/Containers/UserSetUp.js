@@ -12,26 +12,52 @@ class UserSetUp extends React.Component {
       categories: [],
       inputs: ["input-0"],
       budgetForm: true,
-      budgetLimit: ""
+      budgetLimit: "",
+      months: [
+        "January",
+        "February",
+        "March",
+        "April",
+        "May",
+        "June",
+        "July",
+        "August",
+        "September",
+        "October",
+        "November",
+        "December"
+      ],
+      month: "",
+      year: "",
+      newBudgetId: 0,
+      newBudget: ""
     };
   }
 
   componentDidMount() {
-    fetch(`${baseUrl}/categories`)
-      .then(res => res.json())
-      .then(json => {
-        let dropdownParsed = [];
-        json.map(category => {
-          return dropdownParsed.push({
-            key: category.id,
-            value: category.name,
-            text: category.name
-          });
-        });
-        this.setState({
-          categories: dropdownParsed
-        });
-      });
+    var today = new Date();
+    var year = today.getFullYear();
+    var month = today.getMonth();
+
+    this.setState({
+      month: `${this.state.months[month]}`,
+      year: `${year}`
+    });
+    // fetch(`${baseUrl}/categories`)
+    //   .then(res => res.json())
+    //   .then(json => {
+    //     let dropdownParsed = [];
+    //     json.map(category => {
+    //       return dropdownParsed.push({
+    //         key: category.id,
+    //         value: category.name,
+    //         text: category.name
+    //       });
+    //     });
+    //     this.setState({
+    //       categories: dropdownParsed
+    //     });
+    //   });
   }
 
   handleBudgetAmount = e => {
@@ -50,18 +76,25 @@ class UserSetUp extends React.Component {
       },
       body: JSON.stringify({
         user_id: id,
-        balance: parseFloat(this.state.budgetLimit)
+        balance: parseFloat(this.state.budgetLimit),
+        month: this.state.month,
+        year: this.state.year
       })
     })
       .then(res => res.json())
-      .then(json => console.log("New Budget", json));
+      .then(json => {
+        this.setState({
+          newBudgetId: json.id,
+          newBudget: json
+        });
+      });
 
     this.setState({
       budgetForm: false
     });
   };
 
-  persistCategories = id => {
+  persistCategories = (newBudgetId, setNewBudget, newBudget) => {
     // debugger;
     let newCategories = document.querySelectorAll(".fields");
     [].forEach.call(newCategories, function(newCat) {
@@ -78,11 +111,11 @@ class UserSetUp extends React.Component {
           limit: parseFloat(
             newCat.childNodes[1].children[0].childNodes[0].value
           ),
-          budget_id: id
+          budget_id: newBudgetId
         })
       })
         .then(res => res.json())
-        .then(json => console.log("New CAT", json));
+        .then(json => setNewBudget(newBudget));
     });
     this.props.toggleFirstTimeUser();
   };
@@ -98,23 +131,31 @@ class UserSetUp extends React.Component {
       <Grid>
         <Grid.Column width={4} />
         <Grid.Column width={8}>
-          <Segment>
-            {this.state.budgetForm ? (
-              <Form
-                onSubmit={() => this.persistBudget(this.props.currentUser.id)}
-              >
-                <Form.Input
-                  placeholder="Enter Monthly Spending Limit"
-                  width={16}
-                  onChange={this.handleBudgetAmount}
-                />
-                <Button>Next</Button>
-              </Form>
-            ) : (
-              <div>
+          {this.state.budgetForm ? (
+            <div style={{ paddingTop: 100 }}>
+              <Segment>
+                <Form
+                  onSubmit={() => this.persistBudget(this.props.currentUser.id)}
+                >
+                  <Form.Input
+                    placeholder="Enter Monthly Spending Limit"
+                    width={16}
+                    onChange={this.handleBudgetAmount}
+                  />
+                  <Button>Next</Button>
+                </Form>
+              </Segment>
+            </div>
+          ) : (
+            <div style={{ paddingTop: 100 }}>
+              <Segment>
                 <Form
                   onSubmit={() =>
-                    this.persistCategories(this.props.currentUser.id)
+                    this.persistCategories(
+                      this.state.newBudgetId,
+                      this.props.setNewBudget,
+                      this.state.newBudget
+                    )
                   }
                 >
                   {this.state.inputs.map(input => (
@@ -133,10 +174,12 @@ class UserSetUp extends React.Component {
                   ))}
                   <Button>Finish!</Button>
                 </Form>
+                <br />
+                <br />
                 <Button onClick={this.appendInput}>New Category</Button>
-              </div>
-            )}
-          </Segment>
+              </Segment>
+            </div>
+          )}
         </Grid.Column>
         <Grid.Column width={4} />
       </Grid>

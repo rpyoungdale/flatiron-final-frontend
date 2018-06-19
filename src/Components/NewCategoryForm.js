@@ -35,8 +35,9 @@ class NewCategoryForm extends React.Component {
       }
     })
       .then(res => res.json())
-      .then(json => console.log(json));
-    this.props.addedCategory();
+      .then(json =>
+        this.props.changeBudget(this.props.chosenMonth, this.props.chosenYear)
+      );
   };
 
   handleChange = e => {
@@ -50,18 +51,19 @@ class NewCategoryForm extends React.Component {
     return (
       <Segment>
         <Form onSubmit={this.persistCategory}>
-          <h4>Track New Category</h4>
-          <Form.Field inline>
+          <Form.Field>
             <label>Category Name</label>
             <Input
+              fluid
               placeholder="Name"
               name="name"
               onChange={this.handleChange}
             />
           </Form.Field>
-          <Form.Field inline>
+          <Form.Field>
             <label>Limit</label>
             <Input
+              fluid
               placeholder="Spending Limit"
               name="limit"
               onChange={this.handleChange}

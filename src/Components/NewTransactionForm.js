@@ -5,7 +5,8 @@ import {
   Form,
   Input,
   Dropdown,
-  Button
+  Button,
+  Modal
 } from "semantic-ui-react";
 
 const baseUrl = "http://localhost:3000";
@@ -30,6 +31,7 @@ class NewTransactionForm extends React.Component {
   }
 
   componentDidUpdate(prevProps) {
+    // debugger;
     if (this.props.chosenBudget.id !== prevProps.chosenBudget.id) {
       this.setState({
         categories: this.props.chosenBudget.categories
@@ -41,6 +43,7 @@ class NewTransactionForm extends React.Component {
     let category = this.state.categories.find(categ => {
       return categ.name === document.getElementById("dropdown").innerText;
     });
+    // debugger;
     fetch(`${baseUrl}/transactions`, {
       method: "POST",
       body: JSON.stringify({
@@ -53,8 +56,9 @@ class NewTransactionForm extends React.Component {
         "Content-Type": "application/json",
         Authorization: `Bearer ${localStorage.getItem("token")}`
       }
-    }).then(res => res.json());
-    this.props.addedTrans();
+    })
+      .then(res => res.json())
+      .then(json => this.props.addedTrans());
   };
 
   handleChange = e => {
@@ -67,30 +71,37 @@ class NewTransactionForm extends React.Component {
     // console.log("newTrans", this.props);
     return (
       <Segment>
-        <h4>Add New Purchase</h4>
         <Form onSubmit={this.persistTransaction}>
-          <Form.Field required inline>
+          <Form.Field>
             <label>Merchant</label>
             <Input
-              placeholder="$"
+              fluid
+              placeholder="Merchant"
               name="merchant"
               onChange={this.handleChange}
             />
           </Form.Field>
-          <Form.Field required inline>
+          <Form.Field>
             <label>Amount</label>
-            <Input placeholder="$" name="amount" onChange={this.handleChange} />
+            <Input
+              fluid
+              placeholder="Amount"
+              name="amount"
+              onChange={this.handleChange}
+            />
+          </Form.Field>
+          <Form.Field>
+            <label>Category</label>
+            <Dropdown
+              id="dropdown"
+              placeholder="Select Category"
+              fluid
+              search
+              selection
+              options={this.props.dropdownCategories}
+            />
           </Form.Field>
 
-          <label>Category</label>
-          <Dropdown
-            id="dropdown"
-            placeholder="Select Category"
-            fluid
-            search
-            selection
-            options={this.props.dropdownCategories}
-          />
           <Button>Add</Button>
         </Form>
       </Segment>

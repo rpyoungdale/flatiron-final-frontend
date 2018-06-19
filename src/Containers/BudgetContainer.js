@@ -1,6 +1,6 @@
 import React from "react";
 import BudgetCategory from "../Components/BudgetCategory";
-import Transaction from "../Components/Transaction";
+
 import NewTransactionForm from "../Components/NewTransactionForm";
 import NewCategoryForm from "../Components/NewCategoryForm";
 import {
@@ -11,7 +11,9 @@ import {
   Popup,
   Dropdown,
   Form,
-  Message
+  Message,
+  Icon,
+  Modal
 } from "semantic-ui-react";
 import CSVReader from "react-csv-reader";
 
@@ -54,7 +56,7 @@ class BudgetContainer extends React.Component {
       chosenYear: "",
       grandTotalSpent: 0,
       addedTrans: 0,
-      visible: false
+      noBudget: false
     };
   }
 
@@ -66,7 +68,6 @@ class BudgetContainer extends React.Component {
     var today = new Date();
     var year = today.getFullYear();
     var month = today.getMonth();
-
     let dropdown = [];
     let filterDrop = [];
     let grandTotal = 0;
@@ -88,8 +89,8 @@ class BudgetContainer extends React.Component {
     this.props.currentUser.budget
       ? this.setState({
           dropdownCategories: dropdown,
-          chosenYear: `${year}`,
-          chosenMonth: this.state.months[month].value
+          chosenMonth: `${this.state.months[month].value}`,
+          chosenYear: `${year}`
         })
       : null;
 
@@ -106,6 +107,12 @@ class BudgetContainer extends React.Component {
       : null;
   }
 
+  // componentDidUpdate(prevProps) {
+  //   if (prevProps.addedTransState !== this.props.addedTransState) {
+  //     this.props.changeChosenBudget(this.props.chosenBudget);
+  //   }
+  // }
+
   updateMonth = e => {
     this.setState({
       chosenMonth: e.target.innerText
@@ -118,19 +125,19 @@ class BudgetContainer extends React.Component {
     });
   };
 
-  showMessage = () => {
+  showBudgetMessage = () => {
     this.setState({
-      visible: true
+      noBudget: true
     });
   };
 
-  hideMessage = () => {
+  hideBudgetMessage = () => {
     this.setState({
-      visible: false
+      noBudget: false
     });
   };
 
-  changeBudget = () => {
+  changeBudget = (chosenMonth, chosenYear) => {
     fetch(`${baseUrl}/budgets`, {
       headers: {
         "Content-Type": "application/json",
@@ -143,14 +150,23 @@ class BudgetContainer extends React.Component {
         let chosenBudget = json.filter(budget => {
           return (
             budget.user_id === this.props.currentUser.id &&
-            budget.month === this.state.chosenMonth &&
-            budget.year === this.state.chosenYear
+            budget.month === chosenMonth &&
+            budget.year === chosenYear
           );
         });
         if (chosenBudget.length) {
+          let dropdown = [];
+          let filterDrop = [];
+          chosenBudget[0].categories.forEach(cat => {
+            dropdown.push({ key: cat.id, value: cat.name, text: cat.name });
+            filterDrop.push(cat.name);
+          });
+          this.setState({
+            dropdownCategories: dropdown
+          });
           this.props.changeChosenBudget(chosenBudget[0]);
         } else {
-          this.showMessage();
+          this.showBudgetMessage();
         }
       });
   };
@@ -169,72 +185,129 @@ class BudgetContainer extends React.Component {
       categorySpendingBreakdown,
       chosenBudget,
       addedTrans,
-      addedCategory
+      addedCategory,
+      deleteTrans
     } = this.props;
-    chosenBudget.transactions.forEach(trans => {
-      spendingTotal += parseFloat(trans.amount);
-    });
+    if (chosenBudget.transactions.length) {
+      chosenBudget.transactions.forEach(trans => {
+        spendingTotal += parseFloat(trans.amount);
+      });
+    }
     return (
       <Grid>
-        <Grid.Column width={1} />
-        <Grid.Column width={9} style={{ paddingTop: 100 }}>
-          {this.state.visible ? (
+        <Grid.Column width={3} />
+        <Grid.Column width={10} style={{ paddingTop: 100 }}>
+          {this.state.noBudget ? (
             <Message
               negative
-              onDismiss={this.hideMessage}
+              onDismiss={this.hideBudgetMessage}
               header="Budget Not Found"
               content="Please import a budget for this month."
             />
           ) : null}
+
           <Segment>
             {currentUser.first_name ? (
               <div>
-                <Form onSubmit={this.changeBudget}>
-                  <Dropdown
-                    button
-                    className="icon"
-                    floating
-                    labeled
-                    icon="calendar"
-                    placeholder="Select Month"
-                    scrolling
-                    options={this.state.months}
-                    onChange={this.updateMonth}
-                    value={this.state.chosenMonth}
-                    style={{ paddingRight: 10 }}
-                  />
-                  <Dropdown
-                    button
-                    className="icon"
-                    floating
-                    labeled
-                    placeholder="Select Year"
-                    scrolling
-                    options={this.state.years}
-                    onChange={this.updateYear}
-                    value={this.state.chosenYear}
-                  />
-                  <Button>Go</Button>
-                </Form>
-                <h1>
-                  Budget: {chosenBudget.month}, {chosenBudget.year}
-                </h1>
-                <h2>
-                  Starting Balance: ${this.numberWithCommas(
-                    parseFloat(chosenBudget.balance).toFixed(2)
-                  )}
-                </h2>
-                <h2>
-                  Left to Spend: ${this.numberWithCommas(
-                    (
-                      parseFloat(chosenBudget.balance) -
-                      parseFloat(spendingTotal)
-                    ).toFixed(2)
-                  )}
-                </h2>
+                <Grid>
+                  <Grid.Column width={5}>
+                    <h1 style={{ textAlign: "left" }}>
+                      {chosenBudget.month}, {chosenBudget.year}
+                    </h1>
+                    <h4 style={{ textAlign: "left" }}>
+                      ${this.numberWithCommas(
+                        parseFloat(chosenBudget.balance).toFixed(2)
+                      )}{" "}
+                      Budgeted
+                    </h4>
+                    <h4 style={{ textAlign: "left" }}>
+                      ${this.numberWithCommas(
+                        (
+                          parseFloat(chosenBudget.balance) -
+                          parseFloat(spendingTotal)
+                        ).toFixed(2)
+                      )}{" "}
+                      Left to Spend
+                    </h4>
+                  </Grid.Column>
+                  <Grid.Column width={6}>
+                    <Form
+                      onSubmit={() =>
+                        this.changeBudget(
+                          this.state.chosenMonth,
+                          this.state.chosenYear
+                        )
+                      }
+                    >
+                      <Dropdown
+                        button
+                        text={this.state.chosenMonth}
+                        className="icon"
+                        floating
+                        labeled
+                        icon="calendar"
+                        placeholder="Select Month"
+                        scrolling
+                        options={this.state.months}
+                        onChange={this.updateMonth}
+                        value={this.state.chosenMonth}
+                        style={{ paddingRight: 10 }}
+                      />
+                      <Dropdown
+                        button
+                        className="icon"
+                        floating
+                        labeled
+                        placeholder="Select Year"
+                        scrolling
+                        options={this.state.years}
+                        onChange={this.updateYear}
+                        value={this.state.chosenYear}
+                      />
+                      <Button>Go</Button>
+                    </Form>
+                  </Grid.Column>
+                  <Grid.Column width={5}>
+                    <Modal
+                      trigger={<Button basic>Purchase</Button>}
+                      basic
+                      size="small"
+                      closeIcon
+                    >
+                      <Header icon="money" content="Add New Purchase" />
+                      <Modal.Content>
+                        <NewTransactionForm
+                          addedTrans={addedTrans}
+                          chosenBudget={chosenBudget}
+                          dropdownCategories={this.state.dropdownCategories}
+                          currentUser={currentUser}
+                        />
+                      </Modal.Content>
+                    </Modal>
+                    <Modal
+                      trigger={<Button basic>New Category</Button>}
+                      basic
+                      size="small"
+                      closeIcon
+                    >
+                      <Header icon="clipboard" content="Add New Category" />
+                      <Modal.Content>
+                        <NewCategoryForm
+                          chosenMonth={this.state.chosenMonth}
+                          chosenYear={this.state.chosenYear}
+                          changeBudget={this.changeBudget}
+                          addedCategory={addedCategory}
+                          chosenBudget={chosenBudget}
+                          currentUser={this.props.currentUser}
+                        />
+                      </Modal.Content>
+                    </Modal>
+                  </Grid.Column>
+                </Grid>
                 {categorySpendingBreakdown.map(category => {
                   return (
                     <BudgetCategory
+                      deleteTrans={deleteTrans}
                       key={category.category}
                       category={category}
                     />
@@ -244,24 +317,27 @@ class BudgetContainer extends React.Component {
             ) : null}
           </Segment>
         </Grid.Column>
-        <Grid.Column width={5} style={{ paddingTop: 100 }}>
-          <NewTransactionForm
-            addedTrans={addedTrans}
-            chosenBudget={chosenBudget}
-            dropdownCategories={this.state.dropdownCategories}
-            currentUser={currentUser}
-          />
-          <NewCategoryForm
-            addedCategory={addedCategory}
-            chosenBudget={chosenBudget}
-            currentUser={this.props.currentUser}
-          />
-        </Grid.Column>
-        <Grid.Column width={1} />
+
+        <Grid.Column width={3} />
       </Grid>
     );
   }
 }
+
+// <NewTransactionForm
+//   addedTrans={addedTrans}
+//   chosenBudget={chosenBudget}
+//   dropdownCategories={this.state.dropdownCategories}
+//   currentUser={currentUser}
+// />
+// <NewCategoryForm
+//   chosenMonth={this.state.chosenMonth}
+//   chosenYear={this.state.chosenYear}
+//   changeBudget={this.changeBudget}
+//   addedCategory={addedCategory}
+//   chosenBudget={chosenBudget}
+//   currentUser={this.props.currentUser}
+// />
 
 // toggleTransactions = e => {
 //   let showingTransactions = [];

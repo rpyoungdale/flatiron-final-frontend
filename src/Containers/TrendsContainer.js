@@ -28,29 +28,27 @@ class TrendsContainer extends React.Component {
     console.log("trends", this.state);
     return (
       <Grid style={{ paddingTop: 100 }}>
-        <Grid.Column width={1} />
-        <Grid.Column width={4}>
-          <Menu vertical fluid>
-            <Menu.Item>
-              <Menu.Header>Trends</Menu.Header>
+        <Grid.Column width={2} />
 
-              <Menu.Menu>
-                <Menu.Item name="savings" onClick={this.handleSavingsClick} />
-                <Menu.Item name="consumer" onClick={this.handleItemClick} />
-              </Menu.Menu>
-            </Menu.Item>
-          </Menu>
-        </Grid.Column>
         <SavingsChart
           currentUser={this.props.currentUser}
           updateYear={this.updateYear}
           chosenYear={this.state.chosenYear}
           uploaded={this.props.uploaded}
         />
-        <Grid.Column width={1} />
+        <Grid.Column width={2} />
       </Grid>
     );
   }
 }
+// <Menu vertical fluid>
+// <Menu.Item>
+//   <Menu.Header>Trends</Menu.Header>
+//
+//   <Menu.Menu>
+//     <Menu.Item name="savings" onClick={this.handleSavingsClick} />
+//   </Menu.Menu>
+// </Menu.Item>
+// </Menu>
 
 export default TrendsContainer;

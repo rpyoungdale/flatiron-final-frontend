@@ -1,5 +1,13 @@
 import React from "react";
-import { Progress, Segment } from "semantic-ui-react";
+import Transactions from "./Transactions";
+import {
+  Progress,
+  Segment,
+  Modal,
+  Button,
+  Header,
+  Grid
+} from "semantic-ui-react";
 
 const numberWithCommas = x => {
   var parts = x.toString().split(".");
@@ -8,20 +16,49 @@ const numberWithCommas = x => {
 };
 
 const BudgetCategory = props => {
-  if (props.category.totalSpent / props.category.limit > 0.75) {
+  // debugger;
+  if (props.category.totalSpent / props.category.limit > 1) {
     return (
-      <Segment>
-        <h1>
-          {props.category.category}: ${numberWithCommas(
-            parseFloat(
-              props.category.limit - props.category.totalSpent
-            ).toFixed(2)
+      <Segment style={{ backgroundColor: "#DCDCDC" }}>
+        <Grid>
+          <Grid.Column width={3} />
+          <Grid.Column width={10}>
+            <h3 style={{ textAlign: "center" }}>{props.category.category}</h3>
+          </Grid.Column>
+          <Grid.Column width={3}>
+            <Modal
+              trigger={<Button basic>Transactions</Button>}
+              basic
+              size="small"
+              closeIcon
+            >
+              <Header
+                icon="dollar"
+                content={props.category.category + " " + "Transactions"}
+              />
+              <Modal.Content>
+                <Transactions
+                  deleteTrans={props.deleteTrans}
+                  transactions={props.category.transactions}
+                />
+              </Modal.Content>
+            </Modal>
+          </Grid.Column>
+        </Grid>
+        <h4 style={{ textAlign: "left" }}>
+          ${Math.abs(
+            numberWithCommas(
+              parseFloat(
+                props.category.limit - props.category.totalSpent
+              ).toFixed(2)
+            )
           )}{" "}
           Over Budget
-        </h1>
+        </h4>
 
         <Progress
-          error
+          inverted
+          color="red"
           progress="percent"
           percent={parseInt(
             props.category.totalSpent / props.category.limit * 100
@@ -31,18 +68,44 @@ const BudgetCategory = props => {
     );
   } else if (props.category.totalSpent / props.category.limit > 0.75) {
     return (
-      <Segment>
-        <h1>
-          {props.category.category}: ${numberWithCommas(
+      <Segment style={{ backgroundColor: "#DCDCDC" }}>
+        <Grid>
+          <Grid.Column width={3} />
+          <Grid.Column width={10}>
+            <h3 style={{ textAlign: "center" }}>{props.category.category}</h3>
+          </Grid.Column>
+          <Grid.Column width={3}>
+            <Modal
+              trigger={<Button basic>Transactions</Button>}
+              basic
+              size="small"
+              closeIcon
+            >
+              <Header
+                icon="dollar"
+                content={props.category.category + " " + "Transactions"}
+              />
+              <Modal.Content>
+                <Transactions
+                  deleteTrans={props.deleteTrans}
+                  transactions={props.category.transactions}
+                />
+              </Modal.Content>
+            </Modal>
+          </Grid.Column>
+        </Grid>
+        <h4 style={{ textAlign: "left" }}>
+          ${numberWithCommas(
             parseFloat(
               props.category.limit - props.category.totalSpent
             ).toFixed(2)
           )}{" "}
           Remaining
-        </h1>
+        </h4>
 
         <Progress
-          error
+          inverted
+          color="red"
           progress="percent"
           percent={parseInt(
             props.category.totalSpent / props.category.limit * 100
@@ -52,18 +115,44 @@ const BudgetCategory = props => {
     );
   } else if (props.category.totalSpent / props.category.limit > 0.5) {
     return (
-      <Segment>
-        <h1>
-          {props.category.category}: ${numberWithCommas(
+      <Segment style={{ backgroundColor: "#DCDCDC" }}>
+        <Grid>
+          <Grid.Column width={3} />
+          <Grid.Column width={10}>
+            <h3 style={{ textAlign: "center" }}>{props.category.category}</h3>
+          </Grid.Column>
+          <Grid.Column width={3}>
+            <Modal
+              trigger={<Button basic>Transactions</Button>}
+              basic
+              size="small"
+              closeIcon
+            >
+              <Header
+                icon="dollar"
+                content={props.category.category + " " + "Transactions"}
+              />
+              <Modal.Content>
+                <Transactions
+                  deleteTrans={props.deleteTrans}
+                  transactions={props.category.transactions}
+                />
+              </Modal.Content>
+            </Modal>
+          </Grid.Column>
+        </Grid>
+        <h4 style={{ textAlign: "left" }}>
+          ${numberWithCommas(
             parseFloat(
               props.category.limit - props.category.totalSpent
             ).toFixed(2)
           )}{" "}
           Remaining
-        </h1>
+        </h4>
 
         <Progress
-          warning
+          inverted
+          color="yellow"
           progress="percent"
           percent={parseInt(
             props.category.totalSpent / props.category.limit * 100
@@ -73,18 +162,44 @@ const BudgetCategory = props => {
     );
   } else {
     return (
-      <Segment>
-        <h1>
-          {props.category.category}: ${numberWithCommas(
+      <Segment style={{ backgroundColor: "#DCDCDC" }}>
+        <Grid>
+          <Grid.Column width={3} />
+          <Grid.Column width={10}>
+            <h3 style={{ textAlign: "center" }}>{props.category.category}</h3>
+          </Grid.Column>
+          <Grid.Column width={3}>
+            <Modal
+              trigger={<Button basic>Transactions</Button>}
+              basic
+              size="small"
+              closeIcon
+            >
+              <Header
+                icon="dollar"
+                content={props.category.category + " " + "Transactions"}
+              />
+              <Modal.Content>
+                <Transactions
+                  deleteTrans={props.deleteTrans}
+                  transactions={props.category.transactions}
+                />
+              </Modal.Content>
+            </Modal>
+          </Grid.Column>
+        </Grid>
+        <h4 style={{ textAlign: "left" }}>
+          ${numberWithCommas(
             parseFloat(
               props.category.limit - props.category.totalSpent
             ).toFixed(2)
           )}{" "}
           Remaining
-        </h1>
+        </h4>
 
         <Progress
-          success
+          inverted
+          color="green"
           progress="percent"
           percent={parseInt(
             props.category.totalSpent / props.category.limit * 100
@@ -99,7 +214,7 @@ const BudgetCategory = props => {
 //   return (
 //     <Segment>
 //       <h1>
-//         {props.category.category}: ${numberWithCommas(
+//         {props.category.category} ${numberWithCommas(
 //           parseFloat(
 //             props.category.limit - props.category.totalSpent
 //           ).toFixed(2)

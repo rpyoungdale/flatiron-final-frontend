@@ -137,9 +137,11 @@ class LoginContainer extends React.Component {
                     value={this.state.username}
                     onChange={e => this.setState({ username: e.target.value })}
                     placeholder="Username"
+                    icon="user"
                   />
                   <Form.Input
                     fluid
+                    icon="shield"
                     label="Password"
                     name="password"
                     type="password"

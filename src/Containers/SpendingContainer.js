@@ -8,20 +8,19 @@ class SpendingContainer extends React.Component {
 
     this.state = {
       colors: [
-        "#EDC7B7",
-        "#EEE2DC",
-        "#BAB2B5",
-        "#123C69",
-        "#AC3B61",
-        "#25274D",
-        "#464866",
-        "#AAABB8",
-        "#2E9CCA",
-        "#29648A",
-        "#17252A",
-        "#2B7A78",
-        "#3AAFA9",
-        "#DEF2F1"
+        "#E74C3C",
+        "#8E44AD",
+        "#3498DB",
+        "#27AE60",
+        "#F1C40F",
+        "#E67E22",
+        "#FFFF00",
+        "#008000",
+        "#0000FF",
+        "#FF00FF",
+        "#48C9B0",
+        "#AF7AC5",
+        "#3AAFA9"
       ],
       categoryLabels: [],
       merchantLabels: [],
@@ -93,6 +92,10 @@ class SpendingContainer extends React.Component {
             ]
           },
           options: {
+            legend: {
+              position: "left",
+              display: true
+            },
             cutoutPercentage: 60,
             animation: {
               animateScale: true
@@ -131,6 +134,9 @@ class SpendingContainer extends React.Component {
             ]
           },
           options: {
+            legend: {
+              position: "left"
+            },
             cutoutPercentage: 60,
             animation: {
               animateScale: true
@@ -156,26 +162,27 @@ class SpendingContainer extends React.Component {
           }
         });
     return (
-      <Grid divided>
+      <Grid>
         <Grid.Column width={1} />
         <Grid.Column width={4} style={{ paddingTop: 100 }}>
           <Menu fluid vertical>
-            <Menu.Header>
-              <h1>Sort By</h1>
-            </Menu.Header>
-
             <Menu.Menu>
-              <h2>
+              <h1>
                 <Menu.Item name="Category" onClick={this.categoryView} />
                 <Menu.Item name="Merchant" onClick={this.merchantView} />
-              </h2>
+              </h1>
+
               <p>*Merchant not available for CSV import</p>
             </Menu.Menu>
           </Menu>
         </Grid.Column>
         <Grid.Column width={10} style={{ paddingTop: 100 }}>
-          <h1>Spending Breakdown</h1>
-          <canvas id="myChart" />
+          <Segment>
+            <h2>Spending Breakdown</h2>
+          </Segment>
+          <Segment>
+            <canvas id="myChart" />
+          </Segment>
         </Grid.Column>
         <Grid.Column width={1} />
       </Grid>

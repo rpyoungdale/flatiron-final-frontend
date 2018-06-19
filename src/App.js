@@ -34,6 +34,7 @@ class App extends Component {
       merchantSpendingBreakdown: [],
       chosenBudget: {},
       addedTrans: false,
+      deleteTrans: false,
       addedCategory: false,
       uploaded: false
     };
@@ -94,6 +95,7 @@ class App extends Component {
   }
 
   setUser = firstTime => {
+    // debugger;
     fetch(`${baseUrl}/user`, {
       headers: {
         "Content-Type": "application/json",
@@ -118,6 +120,12 @@ class App extends Component {
   onlyUnique(value, index, self) {
     return self.indexOf(value) === index;
   }
+
+  deleteTrans = () => {
+    this.setState({
+      deleteTrans: true
+    });
+  };
 
   reshapeState = json => {
     // debugger;
@@ -224,6 +232,52 @@ class App extends Component {
     });
   };
 
+  setNewBudget = budget => {
+    // debugger;
+    let categorySpending = [];
+    let merchants = [];
+    // debugger;
+    budget.categories.forEach(category => {
+      let totalSpent = 0;
+      let matchingTrans = budget.transactions.filter(transaction => {
+        return transaction.category_id === category.id;
+      });
+      matchingTrans.forEach(trans => (totalSpent += parseFloat(trans.amount)));
+      categorySpending.push({
+        category: category.name,
+        limit: category.limit,
+        totalSpent: totalSpent,
+        transactions: matchingTrans
+      });
+    });
+
+    budget.transactions.forEach(trans => {
+      merchants.push(trans.merchant);
+    });
+
+    let filteredMerchants = merchants.filter(this.onlyUnique);
+    let merchantSpending = [];
+    filteredMerchants.forEach(merchant => {
+      let totalSpent = 0;
+      let matchingTrans = budget.transactions.filter(transaction => {
+        return merchant === transaction.merchant;
+      });
+      matchingTrans.forEach(trans => (totalSpent += parseFloat(trans.amount)));
+      merchantSpending.push({
+        merchant: merchant,
+        totalSpent: totalSpent
+      });
+    });
+
+    this.setState({
+      categorySpendingBreakdown: categorySpending,
+      merchantSpendingBreakdown: merchantSpending,
+      chosenBudget: budget
+    });
+
+    this.setUser(false);
+  };
+
   addedTrans = () => {
     // debugger;
     this.setState({
@@ -263,6 +317,7 @@ class App extends Component {
                   <UserSetUp
                     toggleFirstTimeUser={this.toggleFirstTimeUser}
                     currentUser={this.state.currentUser}
+                    setNewBudget={this.setNewBudget}
                   />
                 )}
               />
@@ -275,6 +330,7 @@ class App extends Component {
                   render={() => (
                     <BudgetContainer
                       addedTrans={this.addedTrans}
+                      deleteTrans={this.deleteTrans}
                       addedCategory={this.addedCategory}
                       currentUser={this.state.currentUser}
                       chosenBudget={this.state.chosenBudget}
@@ -312,7 +368,7 @@ class App extends Component {
                 />
                 <Route
                   exact
-                  path="/trends"
+                  path="/savings"
                   render={() => (
                     <TrendsContainer
                       uploaded={this.state.uploaded}

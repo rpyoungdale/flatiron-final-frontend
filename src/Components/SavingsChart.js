@@ -244,7 +244,10 @@ class SavingsChart extends React.Component {
     });
     return (
       // <Line />
-      <Grid.Column width={10}>
+      <Grid.Column width={12}>
+        <Segment>
+          <h2>Savings over time</h2>
+        </Segment>
         <Segment>
           <Dropdown
             button

@@ -123,20 +123,30 @@ class CSVImport extends React.Component {
       <Grid style={{ paddingTop: 200 }}>
         <Grid.Column width={4} />
         <Grid.Column width={8}>
-          <Segment className="container">
-            <CSVReader
-              cssClass="react-csv-input"
-              label="Select CSV"
-              onFileLoaded={this.uploadBudget}
-            />
-            <Progress percent={this.state.percent} autoSuccess />
-            {this.state.uploaded ? <h2>Imported Successfully!</h2> : null}
-          </Segment>
           <Segment>
-            <CSVLink data={data} style={prettyLink}>
-              ⬇
-            </CSVLink>{" "}
-            to download CSV Template
+            <h2>Import New Budget</h2>
+            <Segment className="container">
+              {this.state.uploaded ? <h2>Imported Successfully!</h2> : null}
+              <Progress percent={this.state.percent} autoSuccess />
+              <Grid>
+                <Grid.Column width={2} />
+                <Grid.Column width={14}>
+                  <h5>
+                    <CSVReader
+                      cssClass="react-csv-input"
+                      label="Select CSV"
+                      onFileLoaded={this.uploadBudget}
+                    />
+                  </h5>
+                </Grid.Column>
+              </Grid>
+            </Segment>
+            <Segment>
+              <CSVLink data={data} style={prettyLink}>
+                ⬇
+              </CSVLink>{" "}
+              to download CSV Template
+            </Segment>
           </Segment>
         </Grid.Column>
         <Grid.Column width={4} />
