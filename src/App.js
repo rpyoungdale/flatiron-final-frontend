@@ -338,6 +338,8 @@ class App extends Component {
                         this.state.categorySpendingBreakdown
                       }
                       changeChosenBudget={this.changeChosenBudget}
+                      firstTimeUser={this.state.firstTimeUser}
+                      setUser={this.setUser}
                     />
                   )}
                 />

@@ -107,11 +107,34 @@ class BudgetContainer extends React.Component {
       : null;
   }
 
-  // componentDidUpdate(prevProps) {
-  //   if (prevProps.addedTransState !== this.props.addedTransState) {
-  //     this.props.changeChosenBudget(this.props.chosenBudget);
-  //   }
-  // }
+  componentDidUpdate(prevProps) {
+    // debugger;
+    if (prevProps.chosenBudget.id !== this.props.chosenBudget.id) {
+      var today = new Date();
+      var year = today.getFullYear();
+      var month = today.getMonth();
+      let dropdown = [];
+      let filterDrop = [];
+
+      this.props.currentUser.budgets.forEach(budget => {
+        budget.categories.forEach(cat => {
+          // debugger;
+          if (filterDrop.includes(cat.name)) {
+            null;
+          } else {
+            dropdown.push({ key: cat.id, value: cat.name, text: cat.name });
+            filterDrop.push(cat.name);
+          }
+        });
+      });
+      // debugger;
+      this.setState({
+        dropdownCategories: dropdown,
+        chosenMonth: `${this.state.months[month].value}`,
+        chosenYear: `${year}`
+      });
+    }
+  }
 
   updateMonth = e => {
     this.setState({

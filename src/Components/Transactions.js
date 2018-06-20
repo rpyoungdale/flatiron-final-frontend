@@ -1,5 +1,5 @@
 import React from "react";
-import { Segment, Button } from "semantic-ui-react";
+import { Segment, Button, Grid } from "semantic-ui-react";
 const baseUrl = "http://localhost:3000";
 
 class Transactions extends React.Component {
@@ -19,14 +19,23 @@ class Transactions extends React.Component {
         {this.props.transactions.map(trans => {
           // debugger;
           return (
-            <div>
-              <h3>
-                {trans.merchant} ${trans.amount}
-              </h3>
-              <Button onClick={() => this.killTransaction(trans)}>
-                Delete
-              </Button>
-            </div>
+            <Grid>
+              <Grid.Row>
+                <Grid.Column width={6}>
+                  <h3>
+                    {trans.merchant} ${parseFloat(trans.amount).toFixed(2)}
+                  </h3>
+                </Grid.Column>
+                <Grid.Column width={10}>
+                  <Button
+                    size="tiny"
+                    onClick={() => this.killTransaction(trans)}
+                  >
+                    Delete
+                  </Button>
+                </Grid.Column>
+              </Grid.Row>
+            </Grid>
           );
         })}
       </div>

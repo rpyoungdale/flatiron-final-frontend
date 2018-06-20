@@ -6,7 +6,8 @@ import {
   Input,
   Dropdown,
   Button,
-  Modal
+  Modal,
+  Message
 } from "semantic-ui-react";
 
 const baseUrl = "http://localhost:3000";
@@ -18,7 +19,8 @@ class NewTransactionForm extends React.Component {
     this.state = {
       categories: [],
       merchant: "",
-      amount: 0
+      amount: "",
+      purchaseAdded: false
     };
   }
 
@@ -59,6 +61,12 @@ class NewTransactionForm extends React.Component {
     })
       .then(res => res.json())
       .then(json => this.props.addedTrans());
+
+    this.setState({
+      merchant: "",
+      amount: "",
+      purchaseAdded: true
+    });
   };
 
   handleChange = e => {
@@ -67,10 +75,23 @@ class NewTransactionForm extends React.Component {
     });
   };
 
+  hidePurchaseMessage = () => {
+    this.setState({
+      purchaseAdded: false
+    });
+  };
+
   render() {
     // console.log("newTrans", this.props);
     return (
       <Segment>
+        {this.state.purchaseAdded ? (
+          <Message
+            positive
+            onDismiss={this.hidePurchaseMessage}
+            header="Purchase Added"
+          />
+        ) : null}
         <Form onSubmit={this.persistTransaction}>
           <Form.Field>
             <label>Merchant</label>
@@ -78,6 +99,7 @@ class NewTransactionForm extends React.Component {
               fluid
               placeholder="Merchant"
               name="merchant"
+              value={this.state.merchant}
               onChange={this.handleChange}
             />
           </Form.Field>
@@ -87,6 +109,7 @@ class NewTransactionForm extends React.Component {
               fluid
               placeholder="Amount"
               name="amount"
+              value={this.state.amount}
               onChange={this.handleChange}
             />
           </Form.Field>

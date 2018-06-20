@@ -69,14 +69,6 @@ class LoginContainer extends React.Component {
     });
   };
 
-  // handleEnter = event => {
-  //   const x = event.which || event.keyCode;
-  //   if (x === 13) {
-  //     <Redirect to="/home" />;
-  //   }
-  // };
-  // onKeyDown={this.handleEnter}
-
   render() {
     console.log(this.state);
     return (
@@ -107,6 +99,7 @@ class LoginContainer extends React.Component {
                   fluid
                   label="Username"
                   name="username"
+                  icon="user"
                   value={this.state.username}
                   onChange={e => this.setState({ username: e.target.value })}
                   placeholder="Username"
@@ -114,7 +107,9 @@ class LoginContainer extends React.Component {
                 <Form.Input
                   fluid
                   label="Password"
+                  icon="shield"
                   name="password"
+                  type="password"
                   value={this.state.password}
                   onChange={e => this.setState({ password: e.target.value })}
                   placeholder="Password"
@@ -150,7 +145,7 @@ class LoginContainer extends React.Component {
                     placeholder="Password"
                   />
                 </Form.Group>
-                <Form.Checkbox label="I agree to the Terms and Conditions" />
+
                 <Button onClick={this.login} type="submit">
                   Login
                 </Button>

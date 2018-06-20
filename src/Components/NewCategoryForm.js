@@ -5,7 +5,8 @@ import {
   Form,
   Input,
   Dropdown,
-  Button
+  Button,
+  Message
 } from "semantic-ui-react";
 
 const baseUrl = "http://localhost:3000";
@@ -16,7 +17,8 @@ class NewCategoryForm extends React.Component {
 
     this.state = {
       name: "",
-      limit: ""
+      limit: "",
+      categoryAdded: false
     };
   }
 
@@ -38,6 +40,11 @@ class NewCategoryForm extends React.Component {
       .then(json =>
         this.props.changeBudget(this.props.chosenMonth, this.props.chosenYear)
       );
+    this.setState({
+      name: "",
+      limit: "",
+      categoryAdded: true
+    });
   };
 
   handleChange = e => {
@@ -46,10 +53,23 @@ class NewCategoryForm extends React.Component {
     });
   };
 
+  hideCategoryMessage = () => {
+    this.setState({
+      categoryAdded: false
+    });
+  };
+
   render() {
     console.log("category", this.props);
     return (
       <Segment>
+        {this.state.categoryAdded ? (
+          <Message
+            positive
+            onDismiss={this.hideCategoryMessage}
+            header="Category Added"
+          />
+        ) : null}
         <Form onSubmit={this.persistCategory}>
           <Form.Field>
             <label>Category Name</label>
@@ -58,6 +78,7 @@ class NewCategoryForm extends React.Component {
               placeholder="Name"
               name="name"
               onChange={this.handleChange}
+              value={this.state.name}
             />
           </Form.Field>
           <Form.Field>
@@ -67,6 +88,7 @@ class NewCategoryForm extends React.Component {
               placeholder="Spending Limit"
               name="limit"
               onChange={this.handleChange}
+              value={this.state.limit}
             />
           </Form.Field>
           <Button>Add</Button>

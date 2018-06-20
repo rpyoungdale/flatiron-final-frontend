@@ -164,7 +164,7 @@ class SpendingContainer extends React.Component {
     return (
       <Grid>
         <Grid.Column width={1} />
-        <Grid.Column width={4} style={{ paddingTop: 100 }}>
+        <Grid.Column width={3} style={{ paddingTop: 100 }}>
           <Menu fluid vertical>
             <Menu.Menu>
               <h1>
@@ -176,12 +176,14 @@ class SpendingContainer extends React.Component {
             </Menu.Menu>
           </Menu>
         </Grid.Column>
-        <Grid.Column width={10} style={{ paddingTop: 100 }}>
+        <Grid.Column width={11} style={{ paddingTop: 100 }}>
           <Segment>
             <h2>Spending Breakdown</h2>
           </Segment>
           <Segment>
-            <canvas id="myChart" />
+            <Segment>
+              <canvas id="myChart" />
+            </Segment>
           </Segment>
         </Grid.Column>
         <Grid.Column width={1} />
